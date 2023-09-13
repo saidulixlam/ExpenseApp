@@ -1,16 +1,22 @@
-import { Fragment } from "react";
-import { Button } from "react-bootstrap";
-// eslint-disable-next-line
-import SignUp from "./components/pages/Signup";
+import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+
+import Login from './components/pages/Login';
+import Products from './components/products/Products';
+import NavBar from './components/Navbar/Navbar';
+
 
 const App = () => {
- 
 
   return (
-    <Fragment>
-      
-      <SignUp/>
-    </Fragment>
+    <Router>
+      <NavBar/>
+      <Switch>
+        <Route path="/products"><Products /></Route>
+        <Route path="/login" exact><Login /></Route>
+        
+      </Switch>
+    </Router>
   );
 };
 
