@@ -1,6 +1,6 @@
-import { useState, useRef } from 'react';
+import { useState, useRef ,useContext} from 'react';
 import { Form, Button, Container } from 'react-bootstrap';
-// import AuthContext from '../../authCtx/auth-context';
+import AuthContext from '../store/auth-context';
 import { useHistory } from 'react-router-dom';
 const Login = () => {
     const [isLogin, setIsLogin] = useState(false);
@@ -9,7 +9,7 @@ const Login = () => {
 
     const history = useHistory();
 
-    // const authCtx = useContext(AuthContext);
+     const authCtx = useContext(AuthContext);
 
     const emailRef = useRef();
     const passwordRef = useRef();
@@ -72,8 +72,8 @@ const Login = () => {
             const email = data.email;
             const token = data.idToken;
             const endpoint = `${email.replace(/\.|@/g, "")}`;
-            console.log(token,endpoint);
-            // authCtx.login(token, endpoint);
+            
+            authCtx.login(token, endpoint);
             history.replace('/products');
         } catch (err) {
             alert(err.message);
