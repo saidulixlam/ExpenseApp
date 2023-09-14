@@ -93,6 +93,32 @@ const Profile = () => {
             console.log(err)
         })
     }, [])
+   
+    const verifyEmailHandler = async () => {
+        try {
+            const response = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyAgGnMLqkFKJf5KduGtLESSQoaaEzpd4sM', {
+                method: 'POST',
+                body: JSON.stringify({
+                    requestType: 'VERIFY_EMAIL',
+                    idToken: token
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Firebase-Locale': 'en' // Set the language to English
+                }
+            })
+            if (!response.ok) {
+                throw new Error('request failed');
+            }
+            const data = await response.json();
+            console.log(data);
+            alert('Code sent on email kindly check');
+            return data
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
 
 
     return (
@@ -138,6 +164,10 @@ const Profile = () => {
                             <div className='text-center my-1 mx-3 d-flex'>
                                 <strong>Email :</strong>
                                 <p>&nbsp;{email}</p>
+                                
+                            </div>
+                            <div className='text-center my-1 mx-3 d-flex'>
+                            <Button variant="success" type="submit" className='my-2 p-1 mr-2' onClick={verifyEmailHandler}>Verify Email</Button>
                             </div>
                         </Card>
                     </Col>

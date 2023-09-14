@@ -1,21 +1,23 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Navbar, Nav, Container } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
+import AuthContext from '../store/auth-context';
 
 
-const NavBar = (props) => {
-
+const NavBar = () => {
+    const ctx=useContext(AuthContext);
+    const isLoggedIn=ctx.isLoggedIn;
     const linkStyle = {
         color: 'white',
         textDecoration: 'none',
     };
-    //   const history = useHistory();
+      const history = useHistory();
 
-    //   if (!isLoggedIn) {
-    //     history.replace('/login');
-    //   }
+      if (!isLoggedIn) {
+        history.replace('/login');
+      }
     function logoutHandler() {
-        console.log('clicked logout');
+        ctx.logout();
     }
 
 
@@ -34,32 +36,32 @@ const NavBar = (props) => {
                                     Home
                                 </Nav.Link>
                             </Nav.Item>
-                            {/* {isLoggedIn && ( */}
+                             {isLoggedIn && ( 
                             <Nav.Item className="mx-5">
                                 <Nav.Link as={Link} to="/products" style={linkStyle}>
                                     Products
                                 </Nav.Link>
                             </Nav.Item>
-                            {/* )} */}
+                             )} 
                             <Nav.Item className="mx-5">
                                 <Nav.Link as={Link} to="/about" style={linkStyle}>
                                     About
                                 </Nav.Link>
                             </Nav.Item>
-                            {/* {!isLoggedIn && ( */}
+                            {!isLoggedIn && (
                             <Nav.Item className="mx-5">
                                 <Nav.Link as={Link} to="/login" style={linkStyle}>
                                     Login
                                 </Nav.Link>
                             </Nav.Item>
-                            {/* )} */}
-                            {/* {isLoggedIn && ( */}
+                                )}
+                            {isLoggedIn && (
                             <Nav.Item className="mx-5">
                                 <Nav.Link onClick={logoutHandler} style={linkStyle}>
                                     Logout
                                 </Nav.Link>
                             </Nav.Item>
-                            {/* )} */}
+                             )}
                         </Nav>
                     </Navbar.Collapse>
                 </Container>
