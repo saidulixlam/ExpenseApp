@@ -6,6 +6,7 @@ import Products from './components/products/Products';
 import NavBar from './components/Navbar/Navbar';
 import Profile from './components/Profile/Profile';
 import Forget from './components/pages/Forget';
+import ExpenseForm from './components/Expenses/ExpenseForm';
 
 
 const App = () => {
@@ -18,6 +19,7 @@ const App = () => {
         <Route path="/login" exact><Login /></Route>
         <Route path="/profile"><Profile/> </Route>
         <Route path="/forget"><Forget/></Route>
+        <Route path="/expenses"><ExpenseForm /></Route>
       </Switch>
     </Router>
   );

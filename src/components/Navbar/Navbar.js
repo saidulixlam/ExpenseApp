@@ -44,11 +44,11 @@ const NavBar = () => {
                                 </Nav.Link>
                             </Nav.Item>
                              )} 
-                            <Nav.Item className="mx-5">
-                                <Nav.Link as={Link} to="/about" style={linkStyle}>
-                                    About
+                            {isLoggedIn && (<Nav.Item className="mx-5">
+                                <Nav.Link as={Link} to="/expenses" style={linkStyle}>
+                                    Expenses
                                 </Nav.Link>
-                            </Nav.Item>
+                            </Nav.Item>)}
                             {!isLoggedIn && (
                             <Nav.Item className="mx-5">
                                 <Nav.Link as={Link} to="/login" style={linkStyle}>

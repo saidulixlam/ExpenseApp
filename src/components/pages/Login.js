@@ -122,7 +122,7 @@ const Login = () => {
                     <div className='text-center'>
                         {!isLoading && (
                             <Button
-                                type='submit'
+                                
                                 variant='light'
                                 className='mt-3 p-1 w-60 rounded btn-sm text-danger'
                                 onClick={forgetPasswordHandler}
@@ -130,7 +130,7 @@ const Login = () => {
                                 Forget Passowrd ?
                             </Button>
                         )}
-                        {isLoading && <p>Sending request...</p>}
+                        {/* {isLoading && <p>Sending request...</p>} */}
                     </div>
                     <div className='text-center'>
                         {!isLoading && (
