@@ -5,16 +5,14 @@ import { Link } from 'react-router-dom';
 const Profile = () => {
     const [imageUrl, setImageUrl] = useState('');
     const [name, setName] = useState('');
-    const [email,setEmail]=useState('');
-    const phone ='8822266900';
+    const [email, setEmail] = useState('');
+    const phone = '8822266900';
 
     const nameRef = useRef();
     const imageRef = useRef();
 
     // const ctx = useContext(AuthContext);
     const token = localStorage.getItem('token');
-
-    console.log('token : ', token);
 
     const handleUpdateButtonClick = async (e) => {
         e.preventDefault();
@@ -51,19 +49,21 @@ const Profile = () => {
             }
 
             const data = await response.json();
-            console.log(data);
 
             setImageUrl(data.photoUrl)
 
         } catch (err) {
             alert(err.message);
         } finally {
+            // Save the updated imageUrl in local storage.
+            localStorage.setItem('imageUrl', imageUrl);
+            setImageUrl(imageUrl);
             setName(updatedName);
         }
 
-
     }
     useEffect(() => {
+
         fetch('https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyAgGnMLqkFKJf5KduGtLESSQoaaEzpd4sM', {
             method: 'POST',
             body: JSON.stringify({
@@ -74,26 +74,30 @@ const Profile = () => {
             }
         }).then((response) => {
             if (response.ok) {
-                console.log(response);
-                console.log('post to get')
+
                 return response.json();
             }
             // throw new Error("Failed to fetch user data");
         }).then((data) => {
-            console.log('i m data', data)
+
             const user = data.users[0];
             if (user) {
                 const imageUrl = user.photoUrl || ''
+
                 setImageUrl(imageUrl);
+
                 setName(user.displayName)
                 setEmail(user.email)
+
+                nameRef.current.value = user.displayName;
+                // imageRef.current.value=user.
             }
 
         }).catch(err => {
             console.log(err)
         })
     }, [])
-   
+
     const verifyEmailHandler = async () => {
         try {
             const response = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyAgGnMLqkFKJf5KduGtLESSQoaaEzpd4sM', {
@@ -164,10 +168,10 @@ const Profile = () => {
                             <div className='text-center my-1 mx-3 d-flex'>
                                 <strong>Email :</strong>
                                 <p>&nbsp;{email}</p>
-                                
+
                             </div>
                             <div className='text-center my-1 mx-3 d-flex'>
-                            <Button variant="success" type="submit" className='my-2 p-1 mr-2' onClick={verifyEmailHandler}>Verify Email</Button>
+                                <Button variant="success" type="submit" className='my-2 p-1 mr-2' onClick={verifyEmailHandler}>Verify Email</Button>
                             </div>
                         </Card>
                     </Col>

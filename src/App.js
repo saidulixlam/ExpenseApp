@@ -5,6 +5,7 @@ import Login from './components/pages/Login';
 import Products from './components/products/Products';
 import NavBar from './components/Navbar/Navbar';
 import Profile from './components/Profile/Profile';
+import Forget from './components/pages/Forget';
 
 
 const App = () => {
@@ -16,6 +17,7 @@ const App = () => {
         <Route path="/products"><Products /></Route>
         <Route path="/login" exact><Login /></Route>
         <Route path="/profile"><Profile/> </Route>
+        <Route path="/forget"><Forget/></Route>
       </Switch>
     </Router>
   );

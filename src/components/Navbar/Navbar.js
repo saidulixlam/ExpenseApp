@@ -7,6 +7,7 @@ import AuthContext from '../store/auth-context';
 const NavBar = () => {
     const ctx=useContext(AuthContext);
     const isLoggedIn=ctx.isLoggedIn;
+   
     const linkStyle = {
         color: 'white',
         textDecoration: 'none',

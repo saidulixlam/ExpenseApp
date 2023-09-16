@@ -1,4 +1,4 @@
-import { useState, useRef ,useContext} from 'react';
+import { useState, useRef, useContext } from 'react';
 import { Form, Button, Container } from 'react-bootstrap';
 import AuthContext from '../store/auth-context';
 import { useHistory } from 'react-router-dom';
@@ -9,7 +9,7 @@ const Login = () => {
 
     const history = useHistory();
 
-     const authCtx = useContext(AuthContext);
+    const authCtx = useContext(AuthContext);
 
     const emailRef = useRef();
     const passwordRef = useRef();
@@ -72,7 +72,7 @@ const Login = () => {
             const email = data.email;
             const token = data.idToken;
             const endpoint = `${email.replace(/\.|@/g, "")}`;
-            
+
             authCtx.login(token, endpoint);
             history.replace('/products');
         } catch (err) {
@@ -81,6 +81,9 @@ const Login = () => {
             setIsLoading(false);
         }
         setError('');
+    }
+    const forgetPasswordHandler = () => {
+        history.replace('/forget')
     }
 
     return (
@@ -120,8 +123,21 @@ const Login = () => {
                         {!isLoading && (
                             <Button
                                 type='submit'
+                                variant='light'
+                                className='mt-3 p-1 w-60 rounded btn-sm text-danger'
+                                onClick={forgetPasswordHandler}
+                            >
+                                Forget Passowrd ?
+                            </Button>
+                        )}
+                        {isLoading && <p>Sending request...</p>}
+                    </div>
+                    <div className='text-center'>
+                        {!isLoading && (
+                            <Button
+                                type='submit'
                                 variant='primary'
-                                className='mt-3 p-2 w-100 rounded'
+                                className='mt-1 p-2 w-100 rounded'
                             >
                                 {isLogin ? 'Login' : 'Create Account'}
                             </Button>
@@ -130,13 +146,13 @@ const Login = () => {
                     </div>
                     <div className='text-center'>
                         <Button
-                            variant='light'
+                            variant='none'
                             onClick={switchAuthModeHandler}
-                            className='my-3'
+                            className='my-3 p-1 rounded btn-sm'
                         >
                             {isLogin
-                                ? "Don't have an account? Create one...."
-                                : 'Already have an account? Login here..'}
+                                ? "New here ?SignUp"
+                                : 'Have an account? Login..'}
                         </Button>
                     </div>
                 </Form>
