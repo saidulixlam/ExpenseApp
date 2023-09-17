@@ -13,12 +13,12 @@ const App = () => {
 
   return (
     <Router>
-      <NavBar/>
+      <NavBar />
       <Switch>
         <Route path="/products"><Products /></Route>
         <Route path="/login" exact><Login /></Route>
-        <Route path="/profile"><Profile/> </Route>
-        <Route path="/forget"><Forget/></Route>
+        <Route path="/profile"><Profile /> </Route>
+        <Route path="/forget"><Forget /></Route>
         <Route path="/expenses"><ExpenseForm /></Route>
       </Switch>
     </Router>
