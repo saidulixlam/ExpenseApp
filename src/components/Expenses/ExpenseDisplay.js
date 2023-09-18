@@ -1,9 +1,8 @@
+// ExpenseDisplay.js
 import React from "react";
 import { Card, ListGroup, Row, Col, Button } from "react-bootstrap";
-// import { FaEdit, FaTrash } from "react-icons"; // Import Font Awesome icons
 
 const ExpenseDisplay = (props) => {
-
   function editHandler(key) {
     props.onEdit(key);
   }
@@ -15,7 +14,6 @@ const ExpenseDisplay = (props) => {
   return (
     <Row>
       {props.expenses.map((item, index) => (
-       
         <Col key={index} md={4}>
           <Card className="my-4 p-2 bg-light shadow rounded">
             <Card.Body className="bg-light shadow">
@@ -33,23 +31,22 @@ const ExpenseDisplay = (props) => {
               </ListGroup>
               <div className="mt-3 d-flex justify-content-between">
                 {/* Edit Button */}
-                <Button 
-                variant="info" 
-                className="mr-3 btn-sm"
-                onClick={() => editHandler(item.key)}
+                <Button
+                  variant="info"
+                  className="mr-3 btn-sm"
+                  onClick={() => editHandler(item.key)}
                 >
                   Edit
                 </Button>
                 {/* Delete Button */}
-                <Button 
-                variant="danger" 
-                className="mr-3 btn-sm"
-                onClick={() => deleteHandler(item.key)}
+                <Button
+                  variant="danger"
+                  className="mr-3 btn-sm"
+                  onClick={() => deleteHandler(item.key)}
                 >
                   Delete
                 </Button>
               </div>
-
             </Card.Body>
           </Card>
         </Col>
