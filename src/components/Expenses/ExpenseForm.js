@@ -9,12 +9,6 @@ const ExpenseForm = () => {
     const expenseCategoryRef = useRef(null);
 
     const [expenseItems, setExpenseItems] = useState([]);
-    // Declare formData state
-    const [formData, setFormData] = useState({
-        price: "",
-        description: "",
-        category: "food", // Set a default category if needed
-    });
 
     // State to control the visibility of the form
     const [showForm, setShowForm] = useState(false);
@@ -35,24 +29,32 @@ const ExpenseForm = () => {
         try {
             const res = await axios.post(`${firebaseURL}/expenses.json`, newExpense);
             if (res.status === 200 || res.status === 201) {
-                console.log(res.data);
+               
                 fetchExpense();
             } else {
                 throw new Error('Something went wrong');
             }
         } catch (err) {
-            console.error(err.message);
+            
             alert('Error submitting the form: ' + err.message);
         }
     };
 
+    
+
+
+    // Fetch expenses on component mount
     const fetchExpense = async () => {
         try {
-            const res = await axios.get(`${firebaseURL}/expenses.json`);
+            const res= await axios.get(`${firebaseURL}/expenses.json`);
             const expenseData = res.data;
             if (expenseData) {
-                // Convert the object of objects into an array
-                const expenseArray = Object.values(expenseData);
+                // Convert the object of objects into an array with keys
+                const expenseArray = Object.keys(expenseData).map(key => ({
+                    key, // Store the unique key of the expense object
+                    ...expenseData[key], // Include the expense object itself
+                }));
+               
                 setExpenseItems(expenseArray);
             } else {
                 console.log('No expense data found.');
@@ -61,16 +63,64 @@ const ExpenseForm = () => {
             console.error('Error fetching expenses: ' + err.message);
         }
     };
-
-    // Fetch expenses on component mount
-    useEffect(() => {
-        fetchExpense();
-    }, []);
-
+    
     // Handle toggle form visibility
     const handleAddExpenseClick = () => {
         setShowForm(!showForm);
     };
+
+     const editExpense = (key) => {
+    //     const expenseToEdit = expenseItems.find((expense) => expense.key === key);
+    //     setShowForm(true);
+    //     if (expenseToEdit) {
+    //         moneySpentRef.current.value = expenseToEdit.price;
+           
+    //         expenseDescriptionRef.current.value = expenseToEdit.description;
+    //         expenseCategoryRef.current.value = expenseToEdit.category;
+    //         // Show the form
+    //     }
+    // };
+    
+        // try {
+        //     const response = await axios.put(`${firebaseURL}/expenses/${key}.json`, updatedExpenseData);
+        //     if (response.status === 200 || response.status === 201) {
+                
+        //         // You can trigger a re-fetch or update your state as needed here.
+        //     } else {
+        //         throw new Error('Something went wrong while updating the expense.');
+        //     }
+        // } catch (error) {
+        //     console.error('Error editing expense:', error.message);
+        //     // Handle the error or display an alert as needed.
+         }
+     
+    
+
+    // Function to delete an expense
+    const deleteExpense = async (key) => {
+        console.log('i was click');
+        try {
+            const response = await axios.delete(`${firebaseURL}/expenses/${key}.json`);
+            if (response.status === 200) {
+                console.log('Expense deleted successfully:', response.data);
+                const newExpense=expenseItems.filter((item)=>{
+                   return item.key !==key;
+                })
+                setExpenseItems(newExpense);
+                // You can trigger a re-fetch or update your state as needed here.
+            } else {
+                throw new Error('Something went wrong while deleting the expense.');
+            }
+        } catch (error) {
+            console.error('Error deleting expense:', error.message);
+            // Handle the error or display an alert as needed.
+        }
+    };
+   
+    useEffect(() => {
+        fetchExpense();
+    }, []);
+
 
     return (
         <Container className="my-4 mx-sm-4 mx-md-5 p-4 rounded">
@@ -133,7 +183,8 @@ const ExpenseForm = () => {
                 </div>
             </Container>
             <Container className="bg-white p-4 rounded shadow-lg my-4 mx-4">
-                <ExpenseDisplay expenses={expenseItems} />
+               
+                <ExpenseDisplay expenses={expenseItems} onDelete={deleteExpense} onEdit={editExpense} />
             </Container>
         </Container>
     );
