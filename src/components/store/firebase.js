@@ -1,0 +1,1 @@
+export const firebaseURL = 'https://expensetracker-d992e-default-rtdb.firebaseio.com';

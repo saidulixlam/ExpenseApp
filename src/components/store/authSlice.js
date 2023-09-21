@@ -20,7 +20,7 @@ export const authSlice = createSlice({
         },
         logout(state) {
             localStorage.removeItem('token');
-            localStorage.removeItem('email');
+            localStorage.removeItem('endpoint');
             state.token = null;
             state.isLoggedIn=false;
         }

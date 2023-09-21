@@ -13,9 +13,13 @@ const ExpenseForm = () => {
     const [expenseDescription, setExpenseDescription] = useState('');
     const [expenseCategory, setExpenseCategory] = useState('');
 
+
     const firebaseURL = 'https://expensetracker-d992e-default-rtdb.firebaseio.com';
 
-    const handleSubmit = async (e) => {
+    const endpoint=localStorage.getItem('endpoint');
+    console.log(endpoint);
+
+    const addItemHandler = async (e) => {
         e.preventDefault();
 
         const newExpense = {
@@ -27,12 +31,12 @@ const ExpenseForm = () => {
         try {
             if (isEditing) {
                 await axios.put(
-                    `${firebaseURL}/expenses/${selectedExpense.key}.json`,
+                    `${firebaseURL}/expenses/${endpoint}/${selectedExpense.key}.json`,
                     newExpense
                 );
                 setIsEditing(false);
             } else {
-                const res = await axios.post(`${firebaseURL}/expenses.json`, newExpense);
+                const res = await axios.post(`${firebaseURL}/expenses/${endpoint}.json`, newExpense);
                 if (res.status !== 200 && res.status !== 201) {
                     throw new Error('Something went wrong');
                 }
@@ -50,7 +54,7 @@ const ExpenseForm = () => {
 
     const fetchExpense = async () => {
         try {
-            const res = await axios.get(`${firebaseURL}/expenses.json`);
+            const res = await axios.get(`${firebaseURL}/expenses/${endpoint}.json`);
             const expenseData = res.data;
             if (expenseData) {
                 const expenseArray = Object.keys(expenseData).map(key => ({
@@ -96,7 +100,7 @@ const ExpenseForm = () => {
 
     const deleteExpense = async (key) => {
         try {
-            const response = await axios.delete(`${firebaseURL}/expenses/${key}.json`);
+            const response = await axios.delete(`${firebaseURL}/expenses/${endpoint}/${key}.json`);
             if (response.status === 200) {
                 console.log('Expense deleted successfully:', response.data);
                 const newExpense = expenseItems.filter((item) => item.key !== key);
@@ -123,7 +127,7 @@ const ExpenseForm = () => {
         <Container className="my-4 mx-sm-4 mx-md-5 p-4 rounded">
             <Container className="bg-white p-4 rounded shadow-lg my-4 mx-4">
                 {showForm && (
-                    <Form onSubmit={handleSubmit}>
+                    <Form onSubmit={addItemHandler}>
                         <h2>{isEditing ? 'Edit Expense' : 'Add an Expense'}</h2>
                         <Row>
                             <Col xs={12} sm={6} md={4}>
