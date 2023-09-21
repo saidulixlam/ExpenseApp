@@ -130,6 +130,7 @@ const ExpenseForm = () => {
                                 <Form.Group controlId="moneySpent">
                                     <Form.Label>Money Spent</Form.Label>
                                     <Form.Control
+                                        required
                                         type="text"
                                         placeholder="Enter amount"
                                         value={moneySpent}
@@ -141,6 +142,7 @@ const ExpenseForm = () => {
                                 <Form.Group controlId="expenseDescription">
                                     <Form.Label>Description</Form.Label>
                                     <Form.Control
+                                        required
                                         type="text"
                                         placeholder="Describe the expense"
                                         value={expenseDescription}
@@ -153,6 +155,7 @@ const ExpenseForm = () => {
                                     <Form.Label>Category</Form.Label>
                                     <Form.Control
                                         as="select"
+                                        required
                                         value={expenseCategory}
                                         onChange={(e) => setExpenseCategory(e.target.value)}
                                     >

@@ -1,6 +1,9 @@
-import { useState, useRef, useContext } from 'react';
+import { useState, useRef } from 'react';
 import { Form, Button, Container } from 'react-bootstrap';
-import AuthContext from '../store/auth-context';
+// import { authSlice } from '../store/authSlice';
+import { authActions } from '../store/authSlice';
+import { useDispatch } from 'react-redux';
+// import AuthContext from '../store/auth-context';
 import { useHistory } from 'react-router-dom';
 const Login = () => {
     const [isLogin, setIsLogin] = useState(false);
@@ -9,7 +12,12 @@ const Login = () => {
 
     const history = useHistory();
 
-    const authCtx = useContext(AuthContext);
+    // const authCtx = useContext(AuthContext);
+    const dispatch = useDispatch();
+    const token = localStorage.getItem('token');
+    if (token) {
+        dispatch(authActions.login(token))
+    }
 
     const emailRef = useRef();
     const passwordRef = useRef();
@@ -69,11 +77,12 @@ const Login = () => {
             }
 
             const data = await response.json();
-            const email = data.email;
+            // const email = data.email;
             const token = data.idToken;
-            const endpoint = `${email.replace(/\.|@/g, "")}`;
+            // const endpoint = `${email.replace(/\.|@/g, "")}`;
 
-            authCtx.login(token, endpoint);
+            // authCtx.login(token, endpoint);
+            dispatch(authActions.login(token));
             history.replace('/products');
         } catch (err) {
             alert(err.message);
@@ -122,7 +131,7 @@ const Login = () => {
                     <div className='text-center'>
                         {!isLoading && (
                             <Button
-                                
+
                                 variant='light'
                                 className='mt-3 p-1 w-60 rounded btn-sm text-danger'
                                 onClick={forgetPasswordHandler}
