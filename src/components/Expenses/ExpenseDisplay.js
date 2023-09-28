@@ -5,10 +5,9 @@ const ExpenseDisplay = (props) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate fetching data. Replace this with your actual data fetching logic.
     setTimeout(() => {
-      setLoading(false); // Set loading to false when data is fetched.
-    }, 2000); // Simulating a 2-second delay for data fetching.
+      setLoading(false);
+    }, 1000);
   }, []);
 
   function editHandler(key) {
@@ -25,7 +24,7 @@ const ExpenseDisplay = (props) => {
       {loading ? (
         <Col className="text-center">
           <Spinner animation="border" role="status">
-            <span className="sr-only">*_*</span>
+            <span className="sr-only"></span>
           </Spinner>
           <p>Loading expenses...</p>
         </Col>
@@ -38,7 +37,7 @@ const ExpenseDisplay = (props) => {
               <Card.Body className="bg-light shadow flex-grow-1">
                 <ListGroup variant="flush">
                   <ListGroup.Item>
-                    <strong>Name:</strong> {item.description}
+                    <strong>Details:</strong> {item.description}
                   </ListGroup.Item>
                   <ListGroup.Item>
                     <strong>Price:</strong> {item.price}

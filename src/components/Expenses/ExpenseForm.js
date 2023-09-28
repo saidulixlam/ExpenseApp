@@ -1,127 +1,140 @@
-// ExpenseForm.js
 import axios from 'axios';
-import React, { useEffect, useState } from "react";
-import { Container, Form, Button, Col, Row } from "react-bootstrap";
-import ExpenseDisplay from "./ExpenseDisplay";
+import React, { useEffect, useState, useRef } from 'react';
+import { Container, Form, Button, Col, Row } from 'react-bootstrap';
+import ExpenseDisplay from './ExpenseDisplay';
 
 const ExpenseForm = () => {
-    const [expenseItems, setExpenseItems] = useState([]);
-    const [showForm, setShowForm] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
-    const [selectedExpense, setSelectedExpense] = useState(null);
-    const [moneySpent, setMoneySpent] = useState('');
-    const [expenseDescription, setExpenseDescription] = useState('');
-    const [expenseCategory, setExpenseCategory] = useState('');
+  const [expenseItems, setExpenseItems] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [selectedExpense, setSelectedExpense] = useState(null);
 
+  const moneySpentRef = useRef(null);
+  const expenseDescriptionRef = useRef(null);
+  const expenseCategoryRef = useRef(null);
 
-    const firebaseURL = 'https://expensetracker-d992e-default-rtdb.firebaseio.com';
+  const firebaseURL = 'https://expensetracker-d992e-default-rtdb.firebaseio.com';
+  const endpoint = localStorage.getItem('endpoint');
 
-    const endpoint=localStorage.getItem('endpoint');
-    console.log(endpoint);
+  const clearInputFields = () => {
+    if (moneySpentRef.current) moneySpentRef.current.value = '';
+    if (expenseDescriptionRef.current) expenseDescriptionRef.current.value = '';
+    if (expenseCategoryRef.current) expenseCategoryRef.current.value = '';
+  };
 
-    const addItemHandler = async (e) => {
-        e.preventDefault();
-
-        const newExpense = {
-            price: moneySpent,
-            description: expenseDescription,
-            category: expenseCategory,
-        };
-
-        try {
-            if (isEditing) {
-                await axios.put(
-                    `${firebaseURL}/expenses/${endpoint}/${selectedExpense.key}.json`,
-                    newExpense
-                );
-                setIsEditing(false);
-            } else {
-                const res = await axios.post(`${firebaseURL}/expenses/${endpoint}.json`, newExpense);
-                if (res.status !== 200 && res.status !== 201) {
-                    throw new Error('Something went wrong');
-                }
-            }
-
-            setMoneySpent('');
-            setExpenseDescription('');
-            setExpenseCategory('');
-            setShowForm(false);
-            fetchExpense();
-        } catch (err) {
-            alert('Error submitting the form: ' + err.message);
-        }
+  const addItemHandler = async (e) => {
+    e.preventDefault();
+    const newExpense = {
+      price: moneySpentRef.current ? moneySpentRef.current.value : '',
+      description: expenseDescriptionRef.current ? expenseDescriptionRef.current.value : '',
+      category: expenseCategoryRef.current ? expenseCategoryRef.current.value : '',
     };
 
-    const fetchExpense = async () => {
-        try {
-            const res = await axios.get(`${firebaseURL}/expenses/${endpoint}.json`);
-            const expenseData = res.data;
-            if (expenseData) {
-                const expenseArray = Object.keys(expenseData).map(key => ({
-                    key,
-                    ...expenseData[key],
-                }));
-
-                setExpenseItems(expenseArray);
-            } else {
-                console.log('No expense data found.');
-            }
-        } catch (err) {
-            console.error('Error fetching expenses: ' + err.message);
+    try {
+      if (isEditing) {
+        await axios.put(
+          `${firebaseURL}/expenses/${endpoint}/${selectedExpense.key}.json`,
+          newExpense
+        );
+        setIsEditing(false);
+      } else {
+        const res = await axios.post(
+          `${firebaseURL}/expenses/${endpoint}.json`,
+          newExpense
+        );
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error('Something went wrong');
         }
-    };
+      }
 
-    const handleAddExpenseClick = () => {
-        if (isEditing) {
-            setIsEditing(false);
-            setSelectedExpense(null);
+      clearInputFields();
+      setShowForm(false);
+      fetchExpense();
+    } catch (err) {
+      alert('Error submitting the form: ' + err.message);
+    }
+  };
 
-            setMoneySpent('');
-            setExpenseDescription('');
-            setExpenseCategory('');
-        }
-        setShowForm(!showForm);
-    };
+  const fetchExpense = async () => {
+    try {
+      const res = await axios.get(`${firebaseURL}/expenses/${endpoint}.json`);
+      const expenseData = res.data;
+      if (expenseData) {
+        const expenseArray = Object.keys(expenseData).map((key) => ({
+          key,
+          ...expenseData[key],
+        }));
 
-    const editExpense = (key) => {
-        const expenseToEdit = expenseItems.find((item) => item.key === key);
+        setExpenseItems(expenseArray);
+      } else {
+        console.log('No expense data found.');
+      }
+    } catch (err) {
+      console.error('Error fetching expenses: ' + err.message);
+    }
+  };
 
-        if (expenseToEdit) {
-            setIsEditing(true);
-            setSelectedExpense(expenseToEdit);
+  const handleAddExpenseClick = () => {
+    setShowForm(!showForm);
 
-            setMoneySpent(expenseToEdit.price);
-            setExpenseDescription(expenseToEdit.description);
-            setExpenseCategory(expenseToEdit.category);
+    if (isEditing) {
+      setIsEditing(false);
+      setSelectedExpense(null);
+    }
+  };
 
-            setShowForm(true);
-        }
-    };
+  const editExpense = (key) => {
+    setIsEditing(true);
+    const expenseToEdit = expenseItems.find((item) => item.key === key);
 
-    const deleteExpense = async (key) => {
-        try {
-            const response = await axios.delete(`${firebaseURL}/expenses/${endpoint}/${key}.json`);
-            if (response.status === 200) {
-                console.log('Expense deleted successfully:', response.data);
-                const newExpense = expenseItems.filter((item) => item.key !== key);
-                setExpenseItems(newExpense);
-            } else {
-                throw new Error('Something went wrong while deleting the expense.');
-            }
-        } catch (error) {
-            console.error('Error deleting expense:', error.message);
-        }
-    };
+    if (expenseToEdit) {
+      setSelectedExpense(expenseToEdit);
+      setShowForm(true);
+    }
+  };
 
-    useEffect(() => {
-        fetchExpense();
-    }, []);
+  useEffect(() => {
+    if (selectedExpense) {
+      if (moneySpentRef.current) {
+        moneySpentRef.current.value = selectedExpense.price;
+      }
 
-    useEffect(() => {
-        if (!showForm) {
-            setSelectedExpense(null);
-        }
-    }, [showForm]);
+      if (expenseDescriptionRef.current) {
+        expenseDescriptionRef.current.value = selectedExpense.description;
+      }
+
+      if (expenseCategoryRef.current) {
+        expenseCategoryRef.current.value = selectedExpense.category;
+      }
+    }
+  }, [selectedExpense]);
+
+  const deleteExpense = async (key) => {
+    try {
+      const response = await axios.delete(
+        `${firebaseURL}/expenses/${endpoint}/${key}.json`
+      );
+      if (response.status === 200) {
+        console.log('Expense deleted successfully:', response.data);
+        const newExpense = expenseItems.filter((item) => item.key !== key);
+        setExpenseItems(newExpense);
+      } else {
+        throw new Error('Something went wrong while deleting the expense.');
+      }
+    } catch (error) {
+      console.error('Error deleting expense:', error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchExpense();
+  }, []);
+
+  useEffect(() => {
+    if (!showForm) {
+      setSelectedExpense(null);
+    }
+  }, [showForm]);
 
     return (
         <Container className="my-4 mx-sm-4 mx-md-5 p-4 rounded">
@@ -134,11 +147,10 @@ const ExpenseForm = () => {
                                 <Form.Group controlId="moneySpent">
                                     <Form.Label>Money Spent</Form.Label>
                                     <Form.Control
+                                        ref={moneySpentRef}
                                         required
                                         type="text"
                                         placeholder="Enter amount"
-                                        value={moneySpent}
-                                        onChange={(e) => setMoneySpent(e.target.value)}
                                     />
                                 </Form.Group>
                             </Col>
@@ -146,11 +158,10 @@ const ExpenseForm = () => {
                                 <Form.Group controlId="expenseDescription">
                                     <Form.Label>Description</Form.Label>
                                     <Form.Control
+                                        ref={expenseDescriptionRef}
                                         required
                                         type="text"
                                         placeholder="Describe the expense"
-                                        value={expenseDescription}
-                                        onChange={(e) => setExpenseDescription(e.target.value)}
                                     />
                                 </Form.Group>
                             </Col>
@@ -158,16 +169,15 @@ const ExpenseForm = () => {
                                 <Form.Group controlId="expenseCategory">
                                     <Form.Label>Category</Form.Label>
                                     <Form.Control
+                                        ref={expenseCategoryRef}
                                         as="select"
                                         required
-                                        value={expenseCategory}
-                                        onChange={(e) => setExpenseCategory(e.target.value)}
                                     >
-                                        <option value="food">Food</option>
                                         <option value="petrol">Petrol</option>
                                         <option value="salary">Salary</option>
                                         <option value="travel">Travel</option>
                                         <option value="shopping">Shopping</option>
+                                        <option value="food">Food</option>
                                         <option value="others">Others</option>
                                     </Form.Control>
                                 </Form.Group>
@@ -188,7 +198,7 @@ const ExpenseForm = () => {
                         onClick={handleAddExpenseClick}
                         className="rounded"
                     >
-                        {showForm ? "Cancel" : "Add New Expense"}
+                        {showForm ? 'Cancel' : 'Add New Expense'}
                     </Button>
                 </div>
             </Container>
