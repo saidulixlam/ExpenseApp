@@ -7,7 +7,7 @@ import { expenseSlice } from './expensesSlice';
 const store=configureStore({
     reducer:{
         auth:authSlice.reducer,
-        expenses:expenseSlice.reducer,
+        expense:expenseSlice.reducer,
         // darkMode:darkModeSlice.reducer,
         // premium:premiumSlice.reducer,
         // csv:csvExportSLice.reducer,

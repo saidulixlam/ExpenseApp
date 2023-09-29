@@ -77,14 +77,14 @@ const Login = () => {
             }
 
             const data = await response.json();
-             const email = data.email;
+            const email = data.email;
             const token = data.idToken;
             const endpoint = `${email.replace(/\.|@/g, "")}`;
             localStorage.setItem('endpoint',endpoint);
 
             // authCtx.login(token, endpoint);
             dispatch(authActions.login(token));
-            history.replace('/products');
+            history.replace('/expenses');
         } catch (err) {
             alert(err.message);
         } finally {
