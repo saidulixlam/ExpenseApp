@@ -1,46 +1,46 @@
-import React from "react";
-import { useState } from "react";
+// import React from "react";
+// import { useState } from "react";
 
-const AuthContext = React.createContext({
-    token:'',
-    email:'',
-    isLoggedIn:false,
-    login:(token,endpoint)=>{},
-    logout:()=>{}
-});
+// const AuthContext = React.createContext({
+//     token:'',
+//     email:'',
+//     isLoggedIn:false,
+//     login:(token,endpoint)=>{},
+//     logout:()=>{}
+// });
 
-export const AuthContextProvider = (props) => {
-    const initialToken=localStorage.getItem('token');
-    const [token,setToken]=useState(initialToken);
+// export const AuthContextProvider = (props) => {
+//     const initialToken=localStorage.getItem('token');
+//     const [token,setToken]=useState(initialToken);
 
-    const userIsLoggedIn=!!token;
+//     const userIsLoggedIn=!!token;
 
-    const initialEndpoint = localStorage.getItem('endpoint');
-    const [endpoint,setEndpoint]=useState(initialEndpoint);
+//     const initialEndpoint = localStorage.getItem('endpoint');
+//     const [endpoint,setEndpoint]=useState(initialEndpoint);
 
     
 
-    const loginHandler=(token,endpoint)=>{
-        localStorage.setItem('token',token)
-        setToken(token);
-        localStorage.setItem('endpoint',endpoint)
-        setEndpoint(endpoint);
-    }
+//     const loginHandler=(token,endpoint)=>{
+//         localStorage.setItem('token',token)
+//         setToken(token);
+//         localStorage.setItem('endpoint',endpoint)
+//         setEndpoint(endpoint);
+//     }
 
-    const logoutHandler=()=>{
-        setToken(null);
-        localStorage.removeItem('token')
-    }
+//     const logoutHandler=()=>{
+//         setToken(null);
+//         localStorage.removeItem('token')
+//     }
 
-    const conextValue={
-        token:token,
-        email:endpoint,
-        isLoggedIn:userIsLoggedIn,
-        login:loginHandler,
-        logout:logoutHandler
-    };
+//     const conextValue={
+//         token:token,
+//         email:endpoint,
+//         isLoggedIn:userIsLoggedIn,
+//         login:loginHandler,
+//         logout:logoutHandler
+//     };
 
-    return <AuthContext.Provider value={conextValue}>{props.children}</AuthContext.Provider>
-}
+//     return <AuthContext.Provider value={conextValue}>{props.children}</AuthContext.Provider>
+// }
  
-export default AuthContext;
+// export default AuthContext;

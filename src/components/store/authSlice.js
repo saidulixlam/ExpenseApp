@@ -23,6 +23,9 @@ export const authSlice = createSlice({
             localStorage.removeItem('endpoint');
             state.token = null;
             state.isLoggedIn=false;
+        },
+         clearImageUrl(state) {
+            state.imageUrl = ''; // Reset the imageUrl in the Redux state
         }
     }
 })

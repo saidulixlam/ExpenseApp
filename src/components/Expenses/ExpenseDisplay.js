@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Card, ListGroup, Row, Col, Button, Spinner } from "react-bootstrap";
+import Layout from "../store/Layout/Layout";
 
 const ExpenseDisplay = (props) => {
   const [loading, setLoading] = useState(true);
@@ -19,8 +20,10 @@ const ExpenseDisplay = (props) => {
   }
 
   return (
-    <Row>
-      <h1>Expense details</h1>
+    <Layout>
+      <Row>
+      <h3 className="text-center">Expense details</h3>
+      
       {loading ? (
         <Col className="text-center">
           <Spinner animation="border" role="status">
@@ -67,9 +70,14 @@ const ExpenseDisplay = (props) => {
               </div>
             </Card>
           </Col>
+          
         ))
+        
       )}
+      
     </Row>
+    {/* <h4 className="text-center">Total expense={props.totalExpense}</h4> */}
+    </Layout>
   );
 };
 

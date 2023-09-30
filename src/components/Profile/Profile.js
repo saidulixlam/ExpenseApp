@@ -1,9 +1,9 @@
 import { useRef, useState, useEffect } from 'react';
 import { Container, Form, Button, Card, Image, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-// import AuthContext from '../store/auth-context';
+
 const Profile = () => {
-    const [imageUrl, setImageUrl] = useState('');
+    const [image, setImage] = useState('');
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const phone = '8822266900';
@@ -11,34 +11,39 @@ const Profile = () => {
     const nameRef = useRef();
     const imageRef = useRef();
 
-    // const ctx = useContext(AuthContext);
     const token = localStorage.getItem('token');
 
     const handleUpdateButtonClick = async (e) => {
         e.preventDefault();
 
-        const imageUrl = URL.createObjectURL(imageRef.current.files[0])
+        // Check if a file was selected for image update
+        if (!imageRef.current.files || imageRef.current.files.length === 0) {
+            // No image selected, show alert
+            alert("No image selected for update.");
+            return;
+        }
+
+        const imageUrl = URL.createObjectURL(imageRef.current.files[0]);
 
         const updatedName = nameRef.current.value;
 
         try {
-            const response = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyAgGnMLqkFKJf5KduGtLESSQoaaEzpd4sM',
-                {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        idToken: token,
-                        displayName: updatedName,
-                        photoUrl: imageUrl,
-                        returnSecureToken: true,
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
+            const response = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyAgGnMLqkFKJf5KduGtLESSQoaaEzpd4sM', {
+                method: 'POST',
+                body: JSON.stringify({
+                    idToken: token,
+                    displayName: updatedName,
+                    photoUrl: imageUrl,
+                    returnSecureToken: true,
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
 
             if (!response.ok) {
                 const data = await response.json();
-                console.log(data);
+                
                 let errorMessage = "Authentication Failed";
 
                 if (data && data.error && data.error.message) {
@@ -49,21 +54,21 @@ const Profile = () => {
             }
 
             const data = await response.json();
+            console.log('after data ',data.photoUrl);
+            setImage(data.photoUrl);
 
-            setImageUrl(data.photoUrl)
+            // Show an alert for successful updates
+            window.alert("Profile updated successfully.");
 
         } catch (err) {
             alert(err.message);
         } finally {
             // Save the updated imageUrl in local storage.
-            localStorage.setItem('imageUrl', imageUrl);
-            setImageUrl(imageUrl);
             setName(updatedName);
         }
-
     }
-    useEffect(() => {
 
+    useEffect(() => {
         fetch('https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyAgGnMLqkFKJf5KduGtLESSQoaaEzpd4sM', {
             method: 'POST',
             body: JSON.stringify({
@@ -74,29 +79,24 @@ const Profile = () => {
             }
         }).then((response) => {
             if (response.ok) {
-
                 return response.json();
             }
-            // throw new Error("Failed to fetch user data");
+            throw new Error("Failed to fetch user data");
         }).then((data) => {
-
             const user = data.users[0];
             if (user) {
-                const imageUrl = user.photoUrl || ''
-
-                setImageUrl(imageUrl);
-
-                setName(user.displayName)
-                setEmail(user.email)
-
+                const image = user.photoUrl;
+                
+                setName(user.displayName);
+                setEmail(user.email);
                 nameRef.current.value = user.displayName;
-                // imageRef.current.value=user.
-            }
 
+                setImage(image);
+            }
         }).catch(err => {
-            console.log(err)
-        })
-    }, [])
+            console.log(err);
+        });
+    }, [token]);
 
     const verifyEmailHandler = async () => {
         try {
@@ -108,23 +108,20 @@ const Profile = () => {
                 }),
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-Firebase-Locale': 'en' // Set the language to English
+                    'X-Firebase-Locale': 'en'
                 }
             })
             if (!response.ok) {
                 throw new Error('request failed');
             }
             const data = await response.json();
-            console.log(data);
             alert('Code sent on email kindly check');
-            return data
+            return data;
         } catch (error) {
             console.log(error);
             throw error;
         }
     }
-
-
     return (
         <div className="my-5 pt-4">
             <h1 className="text-center">Welcome to your Profile ...!!!</h1>
@@ -145,7 +142,7 @@ const Profile = () => {
                             <Image
                                 className='bg-light shadow rounded-circle p-2'
                                 style={{ height: '14rem', width: '14rem' }}
-                                src={imageUrl}
+                                src={image}
                                 roundedCircle
                             />
                         </div>
