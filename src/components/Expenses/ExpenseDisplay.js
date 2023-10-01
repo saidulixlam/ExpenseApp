@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Card, ListGroup, Row, Col, Button, Spinner } from "react-bootstrap";
-import Layout from "../store/Layout/Layout";
 
 const ExpenseDisplay = (props) => {
   const [loading, setLoading] = useState(true);
@@ -20,10 +19,9 @@ const ExpenseDisplay = (props) => {
   }
 
   return (
-    <Layout>
-      <Row>
+    <Row>
       <h3 className="text-center">Expense details</h3>
-      
+
       {loading ? (
         <Col className="text-center">
           <Spinner animation="border" role="status">
@@ -33,9 +31,9 @@ const ExpenseDisplay = (props) => {
         </Col>
       ) : (
         props.expenses.map((item, index) => (
-          <Col key={index} md={4} sm={6} xs={12}>
+          <Col key={index} md={4} sm={6} xs={12} className="mb-3">
             {/* Use md={4} for medium screens, sm={6} for small screens, and xs={12} for extra small screens */}
-            <Card className="my-2 p-2 bg-light shadow rounded h-100 d-flex flex-column">
+            <Card className="p-1 bg-light shadow rounded h-100 d-flex flex-column">
               {/* Add 'h-100' class to make all cards the same height and 'd-flex flex-column' to make it a flex container */}
               <Card.Body className="bg-light shadow flex-grow-1">
                 <ListGroup variant="flush">
@@ -70,14 +68,9 @@ const ExpenseDisplay = (props) => {
               </div>
             </Card>
           </Col>
-          
         ))
-        
       )}
-      
     </Row>
-    {/* <h4 className="text-center">Total expense={props.totalExpense}</h4> */}
-    </Layout>
   );
 };
 

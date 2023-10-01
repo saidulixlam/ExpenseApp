@@ -7,6 +7,7 @@ import NavBar from './components/Navbar/Navbar';
 import Profile from './components/Profile/Profile';
 import Forget from './components/pages/Forget';
 import ExpenseForm from './components/Expenses/ExpenseForm';
+import Premium from './components/pages/premium';
 
 
 const App = () => {
@@ -15,6 +16,7 @@ const App = () => {
     <Router>
       <NavBar />
       <Switch>
+        <Route path="/premium" ><Premium/></Route>
         <Route path="/home" exact><Home/></Route>
         <Route path="/login" ><Login /></Route>
         <Route path="/profile"><Profile /> </Route>

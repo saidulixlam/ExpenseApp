@@ -101,17 +101,17 @@ const NavBar = () => {
           </Navbar.Collapse>
         </Container>
       </Navbar>}
-      <div className="position-fixed top-0 end-0 m-1" style={{ zIndex: 1000 }}>
+      {isLoggedIn && <div className="position-fixed top-0 end-0 m-1" style={{ zIndex: 1000 }}>
         
         <Button
                     variant="light"
                     onClick={toggleTheme}
-                    className="mt-1 p-1 mx-1 rounded btn-sm text-danger"
+                    className="mt-2 p-1 mx-2 rounded btn-sm text-danger"
                 >
-                    {isDarkMode ? <FontAwesomeIcon  icon={faSun} size="2x"/>:<FontAwesomeIcon icon={faMoon} size="2x"/>} 
+                    {isDarkMode ? <FontAwesomeIcon  icon={faSun} size="lg"/>:<FontAwesomeIcon icon={faMoon} size="lg"/>} 
                 </Button>
         
-      </div>
+      </div>}
     </React.Fragment>
   );
 };

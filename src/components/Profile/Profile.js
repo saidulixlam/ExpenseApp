@@ -1,12 +1,15 @@
-import { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Container, Form, Button, Card, Image, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const Profile = () => {
     const [image, setImage] = useState('');
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const phone = '8822266900';
+
+    const isDarkMode = useSelector((state) => state.darkMode.isDarkMode);
 
     const nameRef = useRef();
     const imageRef = useRef();
@@ -16,35 +19,34 @@ const Profile = () => {
     const handleUpdateButtonClick = async (e) => {
         e.preventDefault();
 
-        // Check if a file was selected for image update
         if (!imageRef.current.files || imageRef.current.files.length === 0) {
-            // No image selected, show alert
-            alert("No image selected for update.");
+            alert('No image selected for update.');
             return;
         }
 
         const imageUrl = URL.createObjectURL(imageRef.current.files[0]);
-
         const updatedName = nameRef.current.value;
 
         try {
-            const response = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyAgGnMLqkFKJf5KduGtLESSQoaaEzpd4sM', {
-                method: 'POST',
-                body: JSON.stringify({
-                    idToken: token,
-                    displayName: updatedName,
-                    photoUrl: imageUrl,
-                    returnSecureToken: true,
-                }),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
+            const response = await fetch(
+                'https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyAgGnMLqkFKJf5KduGtLESSQoaaEzpd4sM',
+                {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        idToken: token,
+                        displayName: updatedName,
+                        photoUrl: imageUrl,
+                        returnSecureToken: true,
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
 
             if (!response.ok) {
                 const data = await response.json();
-                
-                let errorMessage = "Authentication Failed";
+                let errorMessage = 'Authentication Failed';
 
                 if (data && data.error && data.error.message) {
                     errorMessage = data.error.message;
@@ -54,141 +56,133 @@ const Profile = () => {
             }
 
             const data = await response.json();
-            console.log('after data ',data.photoUrl);
             setImage(data.photoUrl);
-
-            // Show an alert for successful updates
-            window.alert("Profile updated successfully.");
-
+            window.alert('Profile updated successfully.');
         } catch (err) {
             alert(err.message);
         } finally {
-            // Save the updated imageUrl in local storage.
             setName(updatedName);
         }
-    }
+    };
 
     useEffect(() => {
-        fetch('https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyAgGnMLqkFKJf5KduGtLESSQoaaEzpd4sM', {
-            method: 'POST',
-            body: JSON.stringify({
-                idToken: token
-            }),
-            headers: {
-                'Content-Type': 'application/json'
+        fetch(
+            'https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyAgGnMLqkFKJf5KduGtLESSQoaaEzpd4sM',
+            {
+                method: 'POST',
+                body: JSON.stringify({
+                    idToken: token,
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
             }
-        }).then((response) => {
-            if (response.ok) {
-                return response.json();
-            }
-            throw new Error("Failed to fetch user data");
-        }).then((data) => {
-            const user = data.users[0];
-            if (user) {
-                const image = user.photoUrl;
-                
-                setName(user.displayName);
-                setEmail(user.email);
-                nameRef.current.value = user.displayName;
-
-                setImage(image);
-            }
-        }).catch(err => {
-            console.log(err);
-        });
+        )
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Failed to fetch user data');
+            })
+            .then((data) => {
+                const user = data.users[0];
+                if (user) {
+                    const image = user.photoUrl;
+                    setName(user.displayName);
+                    setEmail(user.email);
+                    nameRef.current.value = user.displayName;
+                    setImage(image);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }, [token]);
 
     const verifyEmailHandler = async () => {
         try {
-            const response = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyAgGnMLqkFKJf5KduGtLESSQoaaEzpd4sM', {
-                method: 'POST',
-                body: JSON.stringify({
-                    requestType: 'VERIFY_EMAIL',
-                    idToken: token
-                }),
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Firebase-Locale': 'en'
+            const response = await fetch(
+                'https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyAgGnMLqkFKJf5KduGtLESSQoaaEzpd4sM',
+                {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        requestType: 'VERIFY_EMAIL',
+                        idToken: token,
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Firebase-Locale': 'en',
+                    },
                 }
-            })
+            );
             if (!response.ok) {
                 throw new Error('request failed');
             }
             const data = await response.json();
-            alert('Code sent on email kindly check');
+            alert('Code sent on email, kindly check');
             return data;
         } catch (error) {
             console.log(error);
             throw error;
         }
-    }
+    };
+
     return (
-        <div className="my-5 pt-4">
+        <div className={`my-5 pt-4 vh-100 ${isDarkMode ? 'bg-dark text-light' : 'bg-light text-dark'}`}>
             <h1 className="text-center">Welcome to your Profile ...!!!</h1>
 
-            <section className="d-flex justify-content-between bg-light" style={{ fontStyle: 'italic', fontFamily: 'Arial, sans-serif' }}>
-                <p className="ml-auto mx-1 mt-3 p-2 bg-light shadow rounded" >"Work hard and spread your knowledge like eternity"</p>
-                <section className="mr-auto mx-1 my-3 p-2 bg-light shadow rounded" >
-                    <small>Your Profile is <strong>64% </strong>
-                        completed .
-                        <span><Link to='/profile'>Complete now...</Link></span></small>
+            <section className={`d-flex justify-content-between ${isDarkMode ? 'bg-dark text-light' : 'bg-light text-dark'} shadow rounded`} style={{ fontStyle: 'italic', fontFamily: 'Arial, sans-serif' }}>
+                <p className="ml-auto mx-1 mt-3 p-2" >"Work hard and spread your knowledge like eternity"</p>
+                <section className={`mr-auto mx-1 my-3 p-2`} >
+                    <small>Your Profile is <strong>64% </strong>completed. <span><Link to='/profile'>Complete now...</Link></span></small>
                 </section>
             </section>
 
-            <Container className='my-5 p-4 bg-light rounded' fluid>
+            <Container className={`my-5 p-4 ${isDarkMode ? 'bg-dark' : 'bg-light'} rounded`} fluid>
                 <Row className='justify-content-center'>
                     <Col sm={12} md={6} lg={4} className='mb-3'>
                         <div className='text-center'>
-                            <Image
-                                className='bg-light shadow rounded-circle p-2'
-                                style={{ height: '14rem', width: '14rem' }}
-                                src={image}
-                                roundedCircle
-                            />
+                            <Image className={`bg-light shadow rounded-circle p-2`} style={{ height: '14rem', width: '14rem' }} src={image} roundedCircle />
                         </div>
                     </Col>
                     <Col sm={12} md={6} lg={8}>
-                        <Card className='rounded bg-light' style={{ border: 'none' }}>
-                            <h4 className='text-center my-3 p-2 bg-light shadow rounded'>
-                                User Details
-                            </h4>
-                            <div className='text-center my-1 mx-3 d-flex'>
+                        <Card className={`rounded ${isDarkMode ? 'bg-dark' : 'bg-light'}`} style={{ border: 'none' }}>
+                            <h4 className={`text-center my-3 p-2 ${isDarkMode ? 'bg-dark text-light' : 'bg-light text-dark'} rounded`}>User Details</h4>
+                            <div className={`text-center my-1 mx-3 d-flex ${isDarkMode ? 'text-light' : 'text-dark'}`}>
                                 <strong>
                                     <p>Name :</p>
                                 </strong>
                                 <p>&nbsp;{name}</p>
                             </div>
-                            <div className='text-center my-1 mx-3 d-flex'>
+                            <div className={`text-center my-1 mx-3 d-flex ${isDarkMode ? 'text-light' : 'text-dark'}`}>
                                 <strong>Phone Number :</strong>
                                 <p>&nbsp;{phone}</p>
                             </div>
-                            <div className='text-center my-1 mx-3 d-flex'>
+                            <div className={`text-center my-1 mx-3 d-flex ${isDarkMode ? 'text-light' : 'text-dark'}`}>
                                 <strong>Email :</strong>
                                 <p>&nbsp;{email}</p>
-
                             </div>
-                            <div className='text-center my-1 mx-3 d-flex'>
+                            <div className={`text-center my-1 mx-3 d-flex ${isDarkMode ? 'text-light' : 'text-dark'}`}>
                                 <Button variant="success" type="submit" className='my-2 p-1 mr-2' onClick={verifyEmailHandler}>Verify Email</Button>
                             </div>
                         </Card>
                     </Col>
                 </Row>
             </Container>
-            <Container className='my-5 p-4 bg-light rounded' fluid>
-                <h3 className="text-center bg-light shadow p-2 mx-2 rounded" style={{ fontFamily: 'Arial, sans-serif' }}>
+
+            <Container className={`my-5 p-4 ${isDarkMode ? 'bg-dark' : 'bg-light'} rounded`} fluid>
+                <h3 className={`text-center ${isDarkMode ? 'bg-dark' : 'bg-light'} shadow p-2 rounded`} style={{ fontFamily: 'Arial, sans-serif' }}>
                     Update Profile
                 </h3>
-                <Form className="p-4 mx-2 bg-light shadow rounded">
+                <Form className={`p-4 mx-2 shadow rounded`} style={{ background: isDarkMode ? 'var(--dark-background)' : 'var(--light-background)' }}>
                     <Form.Group controlId="formName">
                         <Form.Label>Update Name:</Form.Label>
                         <Form.Control type="text" placeholder="Enter your name" ref={nameRef} />
                     </Form.Group>
-
                     <Form.Group controlId="formProfilePic">
                         <Form.Label>Update Profile Picture:</Form.Label>
                         <Form.Control type="file" accept=".jpg, .jpeg, .png" ref={imageRef} />
                     </Form.Group>
-
                     <Button variant="success" type="submit" className='my-2 p-1 mr-2' onClick={handleUpdateButtonClick}>
                         Update
                     </Button>
@@ -197,9 +191,8 @@ const Profile = () => {
                     </Button>
                 </Form>
             </Container>
-
         </div>
     );
-}
+};
 
 export default Profile;
