@@ -2,9 +2,9 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Container, Form, Button, Card, Image, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-
+const img=localStorage.getItem('image')
 const Profile = () => {
-    const [image, setImage] = useState('');
+    const [image, setImage] = useState('img');
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const phone = '8822266900';
@@ -57,6 +57,7 @@ const Profile = () => {
 
             const data = await response.json();
             setImage(data.photoUrl);
+            localStorage.setItem('image',image);
             window.alert('Profile updated successfully.');
         } catch (err) {
             alert(err.message);
@@ -138,7 +139,7 @@ const Profile = () => {
                 </section>
             </section>
 
-            <Container className={`my-5 p-4 ${isDarkMode ? 'bg-dark' : 'bg-light'} rounded`} fluid>
+            <Container className={`mt-4 p-4 vh-100 ${isDarkMode ? 'bg-dark' : 'bg-light'} rounded`} fluid>
                 <Row className='justify-content-center'>
                     <Col sm={12} md={6} lg={4} className='mb-3'>
                         <div className='text-center'>
@@ -170,7 +171,7 @@ const Profile = () => {
                 </Row>
             </Container>
 
-            <Container className={`my-5 p-4 ${isDarkMode ? 'bg-dark' : 'bg-light'} rounded`} fluid>
+            <Container className={`p-5 ${isDarkMode ? 'bg-dark' : 'bg-light'} rounded`} fluid>
                 <h3 className={`text-center ${isDarkMode ? 'bg-dark' : 'bg-light'} shadow p-2 rounded`} style={{ fontFamily: 'Arial, sans-serif' }}>
                     Update Profile
                 </h3>

@@ -20,7 +20,7 @@ const ExpenseDisplay = (props) => {
 
   return (
     <Row>
-      <h3 className="text-center">Expense details</h3>
+      <h3 className="text-center my-2 mx-1">Expense details</h3>
 
       {loading ? (
         <Col className="text-center">
@@ -71,6 +71,7 @@ const ExpenseDisplay = (props) => {
         ))
       )}
     </Row>
+    
   );
 };
 

@@ -6,7 +6,7 @@ import { expenseActions } from '../store/expensesSlice';
 import axios from 'axios';
 import Layout from '../store/Layout/Layout';
 import { useHistory } from 'react-router-dom';
-
+import ExpensesChart from './ExpenseChart';
 
 const ExpenseForm = () => {
   const dispatch = useDispatch();
@@ -39,8 +39,7 @@ const ExpenseForm = () => {
 
   const handlePremiumClick = () => {
     // Toggle the visibility of the premium component
-    history.replace("/premium")
-
+    history.replace('/premium');
   };
 
   const fetchExpense = async () => {
@@ -98,7 +97,9 @@ const ExpenseForm = () => {
         }
 
         // Dispatch the action to update expenseItems in Redux
-        dispatch(expenseActions.addExpense({ key: res.data.name, ...newExpense }));
+        dispatch(
+          expenseActions.addExpense({ key: res.data.name, ...newExpense })
+        );
       }
 
       clearInputFields();
@@ -167,10 +168,10 @@ const ExpenseForm = () => {
     const csvRows = [];
     for (const item of data) {
       const values = Object.values(item);
-      const row = values.map(value => `"${value}"`).join(",");
+      const row = values.map((value) => `"${value}"`).join(',');
       csvRows.push(row);
     }
-    return csvRows.join("\n");
+    return csvRows.join('\n');
   }
   const handleExportCSV = (e) => {
     e.preventDefault();
@@ -183,14 +184,20 @@ const ExpenseForm = () => {
     a.href = url;
     a.download = 'data.csv';
     a.click();
-  }
+  };
 
   return (
     <Layout>
-<Container className={`p-4 rounded my-4 ${isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark'}`}>
-
-       <Container className={`p-4 rounded shadow-lg my-4 mx-4 ${isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark'}`}>
-
+      <div
+        className={`p-5 rounded my-4  ${
+          isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark'
+        }`}
+      >
+        <Container
+          className={`p-3 rounded shadow-lg  mt-3 ${
+            isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark'
+          }`}
+        >
           {showForm && (
             <Form onSubmit={addItemHandler}>
               <h2>{isEditing ? 'Edit Expense' : 'Add an Expense'}</h2>
@@ -254,8 +261,11 @@ const ExpenseForm = () => {
             </Button>
           </div>
         </Container>
-        <Container className={`p-3 rounded shadow-lg my-2 mx-4 ${isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark'}`}>
-
+        <Container
+          className={`rounded shadow-lg my-3 ${
+            isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark'
+          }`}
+        >
           <ExpenseDisplay
             expenses={expenseItems}
             onDelete={deleteExpense}
@@ -263,9 +273,21 @@ const ExpenseForm = () => {
             totalExpense={totalExpense}
           />
         </Container>
-        <Container className="d-flex justify-content-between align-items-center mx-3">
-          <a href="/your-csv-file.csv" className="btn btn-info" onClick={handleExportCSV}>
-            Download Expenses</a>
+        <Container
+          className={`p-3 rounded shadow-lg mt-3 ${
+            isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark'
+          }`}
+        >
+          <ExpensesChart />
+        </Container>
+        <Container className="d-flex justify-content-between align-items-center">
+          <a
+            href="/your-csv-file.csv"
+            className="btn btn-info"
+            onClick={handleExportCSV}
+          >
+            Download Expenses
+          </a>
 
           <Button
             variant="warning"
@@ -279,7 +301,7 @@ const ExpenseForm = () => {
             <span>Join Premium</span>
           </Button>
         </Container>
-      </Container>
+      </div>
     </Layout>
   );
 };
