@@ -113,7 +113,8 @@ const Login = () => {
             className={`d-flex justify-content-center align-items-center vh-100 ${isDarkMode ? 'bg-dark text-light' : 'bg-light text-dark'
                 }`}
         >
-            <Container className={`mx-3 signup-container p-3 shadow rounded my-1 ${isDarkMode ? 'bg-dark text-light' : 'bg-light text-dark'}`}>
+            <div className="min-w-sm-300">
+            <Container className={`mx-2 signup-container p-4 shadow border rounded my-1 ${isDarkMode ? 'bg-dark text-light' : 'bg-light text-dark'}`}>
                 {/* ...Rest of your component code... */}
                 <Button
                     variant="primary"
@@ -190,6 +191,7 @@ const Login = () => {
                     </div>
                 </Form>
             </Container>
+            </div>
         </div>
     );
 };

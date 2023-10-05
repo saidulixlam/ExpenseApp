@@ -195,7 +195,7 @@ const ExpenseForm = () => {
       >
         <Container
           className={`p-3 rounded shadow-lg  mt-3 ${
-            isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark'
+            isDarkMode ? 'bg-dark text-light border' : 'bg-white text-dark'
           }`}
         >
           {showForm && (
@@ -251,7 +251,7 @@ const ExpenseForm = () => {
               </Button>
             </Form>
           )}
-          <div className="text-center">
+          <div className="text-center ">
             <Button
               variant="secondary"
               onClick={handleAddExpenseClick}
@@ -263,7 +263,7 @@ const ExpenseForm = () => {
         </Container>
         <Container
           className={`rounded shadow-lg my-3 ${
-            isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark'
+            isDarkMode ? 'bg-dark text-light border' : 'bg-white text-dark'
           }`}
         >
           <ExpenseDisplay
@@ -275,7 +275,7 @@ const ExpenseForm = () => {
         </Container>
         <Container
           className={`p-3 rounded shadow-lg mt-3 ${
-            isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark'
+            isDarkMode ? 'bg-dark text-light border' : 'bg-white text-dark'
           }`}
         >
           <ExpensesChart />

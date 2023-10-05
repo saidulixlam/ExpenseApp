@@ -2,9 +2,9 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Container, Form, Button, Card, Image, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-const img=localStorage.getItem('image')
+
 const Profile = () => {
-    const [image, setImage] = useState('img');
+    const [image, setImage] = useState('');
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const phone = '8822266900';
@@ -132,7 +132,7 @@ const Profile = () => {
         <div className={`my-5 pt-4 vh-100 ${isDarkMode ? 'bg-dark text-light' : 'bg-light text-dark'}`}>
             <h1 className="text-center">Welcome to your Profile ...!!!</h1>
 
-            <section className={`d-flex justify-content-between ${isDarkMode ? 'bg-dark text-light' : 'bg-light text-dark'} shadow rounded`} style={{ fontStyle: 'italic', fontFamily: 'Arial, sans-serif' }}>
+            <section className={`d-flex justify-content-between ${isDarkMode ? 'bg-dark text-light border' : 'bg-light text-dark'} shadow rounded`} style={{ fontStyle: 'italic', fontFamily: 'Arial, sans-serif' }}>
                 <p className="ml-auto mx-1 mt-3 p-2" >"Work hard and spread your knowledge like eternity"</p>
                 <section className={`mr-auto mx-1 my-3 p-2`} >
                     <small>Your Profile is <strong>64% </strong>completed. <span><Link to='/profile'>Complete now...</Link></span></small>
@@ -147,7 +147,7 @@ const Profile = () => {
                         </div>
                     </Col>
                     <Col sm={12} md={6} lg={8}>
-                        <Card className={`rounded ${isDarkMode ? 'bg-dark' : 'bg-light'}`} style={{ border: 'none' }}>
+                        <Card className={`rounded ${isDarkMode ? 'bg-dark border' : 'bg-light'}`} style={{ border: 'none' }}>
                             <h4 className={`text-center my-3 p-2 ${isDarkMode ? 'bg-dark text-light' : 'bg-light text-dark'} rounded`}>User Details</h4>
                             <div className={`text-center my-1 mx-3 d-flex ${isDarkMode ? 'text-light' : 'text-dark'}`}>
                                 <strong>
@@ -172,10 +172,10 @@ const Profile = () => {
             </Container>
 
             <Container className={`p-5 ${isDarkMode ? 'bg-dark' : 'bg-light'} rounded`} fluid>
-                <h3 className={`text-center ${isDarkMode ? 'bg-dark' : 'bg-light'} shadow p-2 rounded`} style={{ fontFamily: 'Arial, sans-serif' }}>
+                <h3 className={`mx-2 text-center ${isDarkMode ? 'bg-dark border  ' : 'bg-light'} shadow p-2 rounded`} style={{ fontFamily: 'Arial, sans-serif' }}>
                     Update Profile
                 </h3>
-                <Form className={`p-4 mx-2 shadow rounded`} style={{ background: isDarkMode ? 'var(--dark-background)' : 'var(--light-background)' }}>
+                <Form className={`p-4 mx-2 shadow rounded border`} style={{ background: isDarkMode ? 'var(--dark-background)' : 'var(--light-background)' }}>
                     <Form.Group controlId="formName">
                         <Form.Label>Update Name:</Form.Label>
                         <Form.Control type="text" placeholder="Enter your name" ref={nameRef} />
